@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import token from "../models/token.js";
+import Token from "../models/token.js";
 import User from "../models/users.js";
 
 export const register = async (request, response) =>{
@@ -25,8 +25,10 @@ export const register = async (request, response) =>{
         const token = jwt.sign({userId : user.userId},process.env.JWT_SECRET,{
             expiresIn : '3h'
         });
+        await Token.create({token});
         res.json({message : "User registered successfully " ,token});
     }catch(error){
+        console.error("Error during registration : ",error.message);
         return response.status(500).json({msg : "Error while registering user"});
     }   
 }
@@ -48,6 +50,8 @@ export const login = async (request, response) =>{
         const token = jwt.sign({user: userId},process.env.JWT_SECRET,{
             expiresIn : '3h'
         });
+        await Token.create({token});
+
         response.json({message : "User logged in successfully",token});
     }catch(error){
         return response.status(500).json({error : "Error while loggin user"});
@@ -56,10 +60,15 @@ export const login = async (request, response) =>{
 
 export const logout = async (request,response) =>{
     try{
-        request.token = null;
-        response.status(201).json({message : "User logged out successfully"});
+        const authHeader = request.headers.authorization;
+        if(!authHeader || !authHeader.startsWith("Bearer ")){
+            return response.status(400).json({error : "Token not provided"});
+        }
+        const token = authHeader.split(" ")[1];
+        await token.findOneAndDelete({token});
 
+        return response.status(200).json({message : "User logged out successfully"});
     }catch(error){
-        return response.status(500).json({error: "Error while logging out",error});
+        return response.status(500).json({error: "Error while logging out"});
     }
 }
