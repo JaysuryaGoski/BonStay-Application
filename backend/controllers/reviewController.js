@@ -1,4 +1,4 @@
-import Hotel from "../models/hotels";
+import Hotel from "../models/hotels.js";
 
 export const addReview = async(request, response)=>{
     try{
