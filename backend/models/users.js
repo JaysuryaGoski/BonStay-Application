@@ -36,7 +36,15 @@ const userSchema = mongoose.Schema({
         default : []
     }
 })
-
+userSchema.pre('save', async function(next) {
+    if (this.isNew) {
+        const name = this.name.toLowerCase().replace(/ /g, '');
+        let count = await User.countDocuments({ name: { $regex: `^${name}` } });
+        count++;
+        this.userId = `${name}${count}`;
+    }
+    next();
+})
 userSchema.post('save', function(error, doc, next) {
     if (error.name === 'MongoError' && error.code === 11000) {
       next({ error: "User already exists with this email id" });

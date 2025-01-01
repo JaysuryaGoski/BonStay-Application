@@ -1,27 +1,10 @@
+import Navbar from "../components/NavBar";
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/background-image.jpg')" }}>
       {/* Navbar */}
-      <nav className="bg-brown-500 text-white shadow-lg">
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">BonStay</h1>
-          <ul className="flex space-x-6">
-            <li>
-              <a href="/" className="hover:text-gray-300">Home</a>
-            </li>
-            <li>
-              <a href="/hotels" className="hover:text-gray-300">Hotels</a>
-            </li>
-            <li>
-              <a href="/bookings" className="hover:text-gray-300">Bookings</a>
-            </li>
-            <li>
-              <a href="/logout" className="hover:text-gray-300">Logout</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Description Section */}
       <div className="flex items-center justify-center min-h-[80vh]">

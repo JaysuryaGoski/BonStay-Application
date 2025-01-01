@@ -21,7 +21,7 @@ const Navbar = () => {
                 <Link to="/bookings" className="hover:text-gray-300">Bookings</Link>
               </li>
               <li>
-                {/* Add Logout functionality here */}
+                
                 <Link to="/logout" className="hover:text-gray-300">Logout</Link>
               </li>
             </>

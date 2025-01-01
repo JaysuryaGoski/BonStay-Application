@@ -14,7 +14,9 @@ export const register = async (request, response) =>{
             return response.status(400).json({error: "User already exists"});
         }
         const hashedPassword = await bcrypt.hash(password,10);
+        const userId = `${name.split(' ')[0]}${User.countDocuments() + 1}`;
         const user = new User({
+            userId,
             name,
             address,
             emailId,
@@ -22,11 +24,11 @@ export const register = async (request, response) =>{
             password : hashedPassword
         });
         await user.save();
-        const token = jwt.sign({userId : user.userId},process.env.JWT_SECRET,{
+        const token = jwt.sign({user},process.env.JWT_SECRET,{
             expiresIn : '3h'
         });
         await Token.create({token});
-        res.json({message : "User registered successfully " ,token});
+        response.json({message : "User registered successfully " ,token});
     }catch(error){
         console.error("Error during registration : ",error.message);
         return response.status(500).json({msg : "Error while registering user"});
